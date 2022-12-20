@@ -51,6 +51,17 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./aew-category-list/aew-category-list.module').then(m => m.AEWCategoryListModule),
         canActivate: [AuthGuard]
       },
+      {
+        path: 'aew-package-list',
+        loadChildren: () => import('./aew-package-list/aew-package-list.module').then(m => m.AEWPackageListModule),
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'aew-benefit-list/:package_id',
+        loadChildren: () => import('./aew-benefit-list/aew-benefit-list.module').then(m => m.PackageBenefitListModule),
+        // canActivate: [AuthGuard]
+      }
+      
 
 
       

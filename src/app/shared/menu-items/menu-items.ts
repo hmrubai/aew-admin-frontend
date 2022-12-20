@@ -62,13 +62,14 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: 'LocalAdmin'
       },
-      /*{
-        state: 'correction-summary',
-        name: 'WP Correction',
+      {
+        state: 'aew-package-list',
+        name: 'Package List',
         type: 'link',
         icon: 'ti-control-forward',
         permission: 'LocalAdmin'
       },
+      /*
       {
         state: 'beat-correction-summary',
         name: 'AEW Correction',
