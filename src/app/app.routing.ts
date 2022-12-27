@@ -60,7 +60,21 @@ export const AppRoutes: Routes = [
         path: 'aew-benefit-list/:package_id',
         loadChildren: () => import('./aew-benefit-list/aew-benefit-list.module').then(m => m.PackageBenefitListModule),
         // canActivate: [AuthGuard]
-      }
+      },
+      {
+        path: 'aew-news-list',
+        loadChildren: () => import('./aew-news-list/aew-news-list.module').then(m => m.AEWNewsListModule),
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'aew-topic-list',
+        loadChildren: () => import('./aew-topic-list/aew-topic-list.module').then(m => m.AEWTopicListModule),
+        canActivate: [AuthGuard]
+      },
+      
+
+
+      
       
 
 

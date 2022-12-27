@@ -1,0 +1,148 @@
+<block-ui>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>Promotional News List </h5>
+              <button class="btn btn-primary btn-mini float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Add Promotional News</button>
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+                <div class="col-lg-12 ">
+                  <ngx-datatable  #dataTable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="false" [limit]="10">
+
+                    <ngx-datatable-column [width]="20" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <span> {{ rowIndex + 1}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Title" prop="title" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Description" prop="description" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="400" name="Navigation" prop="navigation_link" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="120" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button class="btn btn-info btn-mini" (click)="getItem(row, template)"><i
+                            class="icofont icofont-edit"></i>Edit</button>
+                      </ng-template>
+                    </ngx-datatable-column>
+                  </ngx-datatable>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <form [formGroup]="entryForm">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <!-- <h5>Institute Information</h5> -->
+              </div>
+              <div class="card-block">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Title </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="title" placeholder="Enter Title"
+                      [ngClass]="{ 'is-invalid': submitted && f.title.errors }" type="text" class="form-control" />
+
+                    <div *ngIf="submitted && f.title.errors" class="error-text">
+                      <span *ngIf="f.title.errors.required" class="text-danger"> Title is required</span>
+                      <span *ngIf="f.title.errors.maxlength" class="text-danger">Title must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Description </label>
+                  <div class="col-sm-9">
+                    <textarea rows="3" type="text" formControlName="description" placeholder="Enter description"
+                      [ngClass]="{ 'is-invalid': submitted && f.description.errors }" class="form-control" ></textarea>
+                      <div *ngIf="submitted && f.description.errors" class="error-text">
+                        <span *ngIf="f.description.errors.required" class="text-danger"> Description is required</span>
+                        <span *ngIf="f.description.errors.maxlength" class="text-danger">Description must be not more then 550 characters</span>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label ">Navigation Link </label>
+                  <div class="col-sm-9">
+                    <input type="text" formControlName="navigation_link" placeholder="Enter Navigation Link"
+                      [ngClass]="{ 'is-invalid': submitted && f.navigation_link.errors }" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Feature Images </label>
+                  <div class="col-sm-9 pt-2">
+                    <input type="file" formControlName="feature_images" (change)="onSelectFile($event)" placeholder="Upload file" accept="image/x-png,image/jpeg" placeholder="Insert file"/>
+                    <div *ngIf="submitted && f.feature_images.errors" class="error-text">
+                      <span *ngIf="f.feature_images.errors.required" class="text-danger"> File is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group row text-left">
+                      <label class="col-sm-6 col-form-label">Is Active? </label>
+                      <div class="col-sm-6 mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_active">
+                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+        <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+      </div>
+    </div>
+  </ng-template>
+</block-ui>

@@ -69,6 +69,21 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: 'LocalAdmin'
       },
+      {
+        state: 'aew-news-list',
+        name: 'Promotional News List',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: 'LocalAdmin'
+      },
+      {
+        state: 'aew-topic-list',
+        name: 'Topic List',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: 'LocalAdmin'
+      },
+
       /*
       {
         state: 'beat-correction-summary',

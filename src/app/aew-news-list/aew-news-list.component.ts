@@ -2,24 +2,22 @@ import { Component, TemplateRef, ViewChild, ElementRef, ViewEncapsulation, OnIni
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
-import { ConfirmService } from '../_helpers/confirm-dialog/confirm.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
 import { environment } from '../../environments/environment';
-import { Location } from '@angular/common';
 import * as XLSX from 'xlsx';
 
 @Component({
-    selector: 'app-aew-benefit-list',
-    templateUrl: './aew-benefit-list.component.html',
+    selector: 'app-aew-news-list',
+    templateUrl: './aew-news-list.component.html',
     encapsulation: ViewEncapsulation.None
 })
 
-export class PackageBenefitListComponent implements OnInit {
+export class AEWNewsListComponent implements OnInit {
     currentUser: any = null;
     entryForm: FormGroup;
     uploadForm: FormGroup;
@@ -28,7 +26,7 @@ export class PackageBenefitListComponent implements OnInit {
 
     submitted = false;
     @BlockUI() blockUI: NgBlockUI;
-    modalTitle = 'Add New Package';
+    modalTitle = 'Add News';
     btnSaveText = 'Save';
 
     modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
@@ -37,27 +35,18 @@ export class PackageBenefitListComponent implements OnInit {
     page = new Page();
     rows = [];
     itemTypeList: Array<any> = [];
+    coachingCenterList: Array<any> = [];
     loadingIndicator = false;
     ColumnMode = ColumnMode;
 
     urls = [];
     files = [];
 
-    file: File;
-    arrayBuffer: any;
-    filelist: any;
-    packageDetails;
-    is_loaded = false;
-
-    importedData:any;
-    dataImported = false;
-
     scrollBarHorizontal = (window.innerWidth < 1200);
     baseUrl = environment.baseUrl;
     @ViewChild('dataTable') table: any;
 
-    packageId;
-
+    arrayBuffer: any;
     itemFile: File;
     itemUploadList: Array<any> = [];
 
@@ -68,47 +57,44 @@ export class PackageBenefitListComponent implements OnInit {
         public formBuilder: FormBuilder,
         private _service: CommonService,
         private _authService: AuthenticationService,
-        private confirmService: ConfirmService,
-        private routerLocation: Location,
         private toastr: ToastrService,
-        private route: ActivatedRoute,
         private router: Router
     ) {
-        // this.page.pageNumber = 0;
-        // this.page.size = 10;
         window.onresize = () => {
             this.scrollBarHorizontal = (window.innerWidth < 1200);
         };
         this._authService.currentUserDetails.subscribe((value) => {
             this.currentUser = value;
         });
-        this.packageId = this.route.snapshot.paramMap.get("package_id");
     }
+
 
     ngOnInit() {
         this.entryForm = this.formBuilder.group({
             id: [null],
-            package_id: [null],
-            benefit: [null, [Validators.required, Validators.maxLength(550)]],
+            title: [null, [Validators.required, Validators.maxLength(550)]],
+            description: [null, [Validators.required, Validators.maxLength(550)]],
+            navigation_link: [null, [Validators.maxLength(550)]],
+            feature_images: [null],
+            is_active: [true]
         });
-
-        this.entryForm.controls['package_id'].setValue(this.packageId);
 
         this.uploadForm = this.formBuilder.group({
             feature_thumbnail: ['']
         });
 
-        this.getPackageDetails();
+        this.getList();
     }
 
     get f() {
         return this.entryForm.controls;
     }
 
-    addfile(event) {
-        this.file = event.target.files[0];
+    uploadItemFile(event) {
+        this.packagePrice = 0;
+        this.itemFile = event.target.files[0];
         let fileReader = new FileReader();
-        fileReader.readAsArrayBuffer(this.file);
+        fileReader.readAsArrayBuffer(this.itemFile);
         fileReader.onload = (e) => {
             this.arrayBuffer = fileReader.result;
             var data = new Uint8Array(this.arrayBuffer);
@@ -118,10 +104,18 @@ export class PackageBenefitListComponent implements OnInit {
             var workbook = XLSX.read(bstr, { type: "binary" });
             var first_sheet_name = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[first_sheet_name];
-            this.importedData = XLSX.utils.sheet_to_json(worksheet, { raw: false });
-            this.dataImported = true;
-            this.filelist = this.file;
-            console.log(this.importedData)
+            const list = XLSX.utils.sheet_to_json(worksheet);
+            this.itemUploadList = [];
+            list.forEach((element, i) => {
+                this.packagePrice += Number(element['unit_price']);
+                this.itemUploadList.push({
+                    bscs_item_id: element['id'],
+                    unit_price: element['unit_price']
+                })
+            });
+            console.log(this.itemUploadList)
+            console.log(this.packagePrice)
+            this.entryForm.controls['price_of_package'].setValue(this.packagePrice);
         }
     }
 
@@ -140,24 +134,38 @@ export class PackageBenefitListComponent implements OnInit {
         }
     }
 
-    getPackageDetails() {
-        this._service.get('package-details-by-id/' + this.packageId).subscribe(res => {
+    getList() {
+        this.loadingIndicator = true;
+
+        this._service.get('admin/news-list').subscribe(res => {
             if (res.status == false) {
                 this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
                 return;
             }
-            this.packageDetails = res.data;
-            this.rows = res.data.benefits;
-            this.is_loaded = true;
-        }, err => { }
+            this.rows = res.data;
+            setTimeout(() => {
+                this.loadingIndicator = false;
+            }, 1000);
+        }, err => {
+            this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
+            setTimeout(() => {
+                this.loadingIndicator = false;
+            }, 1000);
+        }
         );
     }
 
     getItem(item, template: TemplateRef<any>) {
-        this.modalTitle = 'Update Benefit';
+
+        this.modalTitle = 'Update Package';
         this.btnSaveText = 'Update';
+
         this.entryForm.controls['id'].setValue(item.id);
-        this.entryForm.controls['benefit'].setValue(item.benefit);
+        this.entryForm.controls['title'].setValue(item.title);
+        this.entryForm.controls['description'].setValue(item.description);
+        this.entryForm.controls['navigation_link'].setValue(item.navigation_link);
+        this.entryForm.controls['is_active'].setValue(item.is_active);
+
         this.modalRef = this.modalService.show(template, this.modalConfig);
     }
 
@@ -167,21 +175,30 @@ export class PackageBenefitListComponent implements OnInit {
             return;
         }
 
+        const formData = new FormData();
+        if(this.uploadForm.get('feature_thumbnail').value){
+            formData.append('file', this.uploadForm.get('feature_thumbnail').value);
+        }
+
         this.entryForm.value.id ? this.blockUI.start('Saving...') : this.blockUI.start('Updating...');
 
         const obj = {
             id: this.entryForm.value.id ? this.entryForm.value.id : null,
-            package_id: this.packageId,
-            benefit: this.entryForm.value.benefit.trim()
+            title: this.entryForm.value.title.trim(),
+            description: this.entryForm.value.description.trim(),
+            navigation_link: this.entryForm.value.navigation_link ? this.entryForm.value.navigation_link.trim(): null,
+            is_active: this.entryForm.value.is_active
         };
 
-        this._service.post('admin/benefit-save-or-update', obj).subscribe(
+        formData.append('data', JSON.stringify(obj));
+
+        this._service.post('admin/news-save-or-update', formData).subscribe(
             data => {
                 this.blockUI.stop();
                 if (data.status == true) {
                     this.toastr.success(data.message, 'Success!', { timeOut: 2000 });
                     this.modalHide();
-                    this.getPackageDetails();
+                    this.getList();
 
                 } else {
                     this.toastr.error(data.message, 'Error!', { timeOut: 2000 });
@@ -194,50 +211,20 @@ export class PackageBenefitListComponent implements OnInit {
         );
     }
 
-    deleteBenefit(benefit){
-        let params = {
-            id: benefit.id,
-        }
-
-        this.confirmService.confirm('Are you sure?', 'Do you want to delete?')
-            .subscribe(
-                result => {
-                    if (result) {
-                        this.blockUI.start('Deleting...');
-                        this._service.post('admin/benefit-delete', params).subscribe(res => {
-                            this.toastr.success(res.message, 'Successful!');
-                            this.getPackageDetails();
-                            this.blockUI.stop();
-                        }, err => {
-                            this.blockUI.stop();
-                        });
-                    }
-                }
-            );
-    }
-
-
     toggleExpandRow(row) {
-        console.log('Toggled Expand Row!', row);
         this.table.rowDetail.toggleExpandRow(row);
     }
 
     modalHide() {
         this.entryForm.reset();
-        this.uploadForm.reset();
         this.modalRef.hide();
         this.submitted = false;
-        this.modalTitle = 'Add Benefit';
+        this.modalTitle = 'Add New News';
         this.btnSaveText = 'Save';
-        this.packagePrice = 0;
     }
 
     openModal(template: TemplateRef<any>) {
-        this.entryForm.controls['package_id'].setValue(this.packageId);
+        this.entryForm.controls['is_active'].setValue(true);
         this.modalRef = this.modalService.show(template, this.modalConfig);
-    }
-
-    backToLocation(){
-        this.routerLocation.back();
     }
 }
