@@ -83,6 +83,15 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: 'LocalAdmin'
       },
+      {
+        state: 'school-list',
+        name: 'School List',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: 'LocalAdmin'
+      },
+
+      
 
       /*
       {

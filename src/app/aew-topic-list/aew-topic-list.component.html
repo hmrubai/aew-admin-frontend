@@ -130,6 +130,14 @@
                   </div>
                 </div>
                 <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">School </label>
+                  <div class="col-sm-9">
+                    <ng-select [clearable]="true" formControlName="school_id" [clearOnBackspace]="false" [items]="schoolList" [multiple]=false bindLabel="title" bindValue="id"
+                    placeholder="Select School">
+                  </ng-select>
+                  </div>
+                </div>
+                <div class="form-group row">
                   <label class="col-sm-3 col-form-label ">Limit </label>
                   <div class="col-sm-9">
                     <input type="text" formControlName="limit" placeholder="Enter Limit"
