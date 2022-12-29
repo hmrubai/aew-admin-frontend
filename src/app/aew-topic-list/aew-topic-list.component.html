@@ -106,7 +106,7 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Syllabus </label>
+                  <label class="col-sm-3 col-form-label required">Syllabus </label>
                   <div class="col-sm-9">
                     <ng-select [clearable]="true" formControlName="package_type_id" [clearOnBackspace]="false" [items]="packageType" [multiple]=false bindLabel="name" bindValue="id"
                     placeholder="Select Syllabus">
@@ -114,7 +114,7 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Category </label>
+                  <label class="col-sm-3 col-form-label required">Category </label>
                   <div class="col-sm-9">
                     <ng-select [clearable]="true" formControlName="catagory_id" [clearOnBackspace]="false" [items]="categoryList" [multiple]=false bindLabel="name" bindValue="id"
                     placeholder="Select Category">
@@ -138,57 +138,12 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label ">Limit </label>
+                  <label class="col-sm-3 col-form-label required">Limit </label>
                   <div class="col-sm-9">
                     <input type="text" formControlName="limit" placeholder="Enter Limit"
                       [ngClass]="{ 'is-invalid': submitted && f.limit.errors }" class="form-control" />
                   </div>
                 </div>
-                
-
-                <!--<div class="form-group row">
-                  <label class="col-sm-3 col-form-label ">Promo Video URL </label>
-                  <div class="col-sm-9">
-                    <input type="text" formControlName="promo_url" placeholder="Enter promo video URL"
-                      [ngClass]="{ 'is-invalid': submitted && f.promo_url.errors }" class="form-control" />
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Feature Images </label>
-                  <div class="col-sm-9 pt-2">
-                    <input type="file" formControlName="feature_images" (change)="onSelectFile($event)" placeholder="Upload file" accept="image/x-png,image/jpeg" placeholder="Insert file"/>
-                    <div *ngIf="submitted && f.feature_images.errors" class="error-text">
-                      <span *ngIf="f.feature_images.errors.required" class="text-danger"> File is required</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-6 col-form-label required">Package Price </label>
-                      <div class="col-sm-6">
-                        <input type="text" numeric numericType="number" formControlName="price_of_package" placeholder="Enter package price"
-                          [ngClass]="{ 'is-invalid': submitted && f.price_of_package.errors }"  class="form-control" />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group row">
-                      <label class="col-sm-6 col-form-label ">Previous Price </label>
-                      <div class="col-sm-6">
-                        <input type="text" numeric numericType="number" formControlName="previous_price" placeholder="Enter previous price"
-                          [ngClass]="{ 'is-invalid': submitted && f.previous_price.errors }"  class="form-control" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label ">Promo </label>
-                  <div class="col-sm-9">
-                    <input type="text" formControlName="promo" placeholder="Enter promo"
-                      [ngClass]="{ 'is-invalid': submitted && f.promo.errors }" class="form-control" />
-                  </div>
-                </div>-->
                 <div class="row">
                   <div class="col-md-4">
                     <div class="form-group row text-left">

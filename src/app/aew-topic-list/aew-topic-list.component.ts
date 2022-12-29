@@ -80,12 +80,12 @@ export class AEWTopicListComponent implements OnInit {
             id: [null],
             title: [null, [Validators.required, Validators.maxLength(550)]],
             hint: [null, [Validators.required, Validators.maxLength(550)]],
-            country_id: [null],
+            country_id: [18],
             package_type_id: [null, [Validators.required]],
             catagory_id: [null, [Validators.required]],
             grade_id: [null],
             school_id: [null],
-            limit: [null],
+            limit: [100, [Validators.required]],
             is_active: [true],
         });
 
@@ -253,9 +253,9 @@ export class AEWTopicListComponent implements OnInit {
         }
 
         const formData = new FormData();
-        if(this.uploadForm.get('feature_thumbnail').value){
-            formData.append('file', this.uploadForm.get('feature_thumbnail').value);
-        }
+        // if(this.uploadForm.get('feature_thumbnail').value){
+        //     formData.append('file', this.uploadForm.get('feature_thumbnail').value);
+        // }
 
         this.entryForm.value.id ? this.blockUI.start('Saving...') : this.blockUI.start('Updating...');
 
@@ -269,17 +269,15 @@ export class AEWTopicListComponent implements OnInit {
             grade_id: this.entryForm.value.grade_id,
             school_id: this.entryForm.value.school_id,
             limit: this.entryForm.value.limit,
-            is_b_unit: this.entryForm.value.is_b_unit,
-            is_c_unit: this.entryForm.value.is_c_unit,
             is_active: this.entryForm.value.is_active
         };
 
         formData.append('data', JSON.stringify(obj));
 
-        this._service.post('beat/package-save-or-update', formData).subscribe(
+        this._service.post('admin/topic-save-or-update', formData).subscribe(
             data => {
                 this.blockUI.stop();
-                if (data.status == 'Ok') {
+                if (data.status == true) {
                     this.toastr.success(data.message, 'Success!', { timeOut: 2000 });
                     this.modalHide();
                     this.getList();
