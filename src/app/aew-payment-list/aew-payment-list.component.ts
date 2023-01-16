@@ -12,12 +12,12 @@ import { environment } from '../../environments/environment';
 import * as XLSX from 'xlsx';
 
 @Component({
-    selector: 'app-aew-expert-list',
-    templateUrl: './aew-expert-list.component.html',
+    selector: 'app-aew-payment-list',
+    templateUrl: './aew-payment-list.component.html',
     encapsulation: ViewEncapsulation.None
 })
 
-export class AEWExpertListComponent implements OnInit {
+export class AEWPaymentListComponent implements OnInit {
     currentUser: any = null;
     entryForm: FormGroup;
     uploadForm: FormGroup;
@@ -142,7 +142,7 @@ export class AEWExpertListComponent implements OnInit {
     getList() {
         this.loadingIndicator = true;
 
-        this._service.get('admin/expert-list').subscribe(res => {
+        this._service.get('admin/payment-list').subscribe(res => {
             if (res.status == false) {
                 this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
                 return;

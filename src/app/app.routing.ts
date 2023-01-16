@@ -81,8 +81,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./school-list/school-list.module').then(m => m.SchoolListModule),
         canActivate: [AuthGuard]
       },
-
-      
+      {
+        path: 'aew-payment-list',
+        loadChildren: () => import('./aew-payment-list/aew-payment-list.module').then(m => m.AEWPaymentListModule),
+        canActivate: [AuthGuard]
+      },
       
     ]
   },

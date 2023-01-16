@@ -84,6 +84,13 @@ const MENUITEMS = [
         permission: 'LocalAdmin'
       },
       {
+        state: 'aew-payment-list',
+        name: 'Payment List',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: 'LocalAdmin'
+      },
+      {
         state: 'aew-expert-list',
         name: 'Expert List',
         type: 'link',
@@ -97,6 +104,7 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         permission: 'LocalAdmin'
       },
+      
 
       
 
