@@ -5,41 +5,38 @@
         <div class="col-lg-12">
           <div class="card card-border-primary">
             <div class="card-header">
-              <h5>AEW Topic List </h5>
+              <h5>Expert List </h5>
               <button class="btn btn-primary btn-mini float-right" (click)="openModal(template)"><i
-                  class=" icofont icofont-plus "></i> Add New Topic</button>
-              <button class="btn btn-success btn-mini float-right mr-2" (click)="openUploadModal(template)"><i
-                  class=" icofont icofont-plus "></i> Upload Topic via Excel</button>
+                  class=" icofont icofont-plus "></i> Add New Expert</button>
             </div>
             <div class="card-block ">
-              <div class="row ">
-                <!-- <div class="col-lg-4 mb-3">
-                  <ng-select [clearable]="false" [clearOnBackspace]="false" (change)="onInstituteChange($event)"
-                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
-                    placeholder="Select institute">
-                  </ng-select>
-                </div> -->
-              </div>
               <div class="row ">
                 <div class="col-lg-12 ">
                   <ngx-datatable  #dataTable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
                     [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
                     [externalPaging]="false" [limit]="10">
 
-                    <ngx-datatable-column [width]="40" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="20" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
                         <span> {{ rowIndex + 1}} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="300" name="Title" prop="title" [draggable]="false"
+                    <ngx-datatable-column [width]="100" name="Title" prop="title" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="20" name="Limit" prop="limit" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="100" name="Description" prop="description" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="400" name="Navigation" prop="navigation_link" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value }} </span>
                       </ng-template>
@@ -51,7 +48,6 @@
                             class="icofont icofont-edit"></i>Edit</button>
                       </ng-template>
                     </ngx-datatable-column>
-
                   </ngx-datatable>
 
                 </div>
@@ -75,6 +71,9 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
+              <div class="card-header">
+                <!-- <h5>Institute Information</h5> -->
+              </div>
               <div class="card-block">
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label required">Title </label>
@@ -89,61 +88,31 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Hint/Description </label>
+                  <label class="col-sm-3 col-form-label required">Description </label>
                   <div class="col-sm-9">
-                    <textarea rows="3" type="text" formControlName="hint" placeholder="Enter hint"
-                      [ngClass]="{ 'is-invalid': submitted && f.hint.errors }" class="form-control" ></textarea>
-                      <div *ngIf="submitted && f.hint.errors" class="error-text">
-                        <span *ngIf="f.hint.errors.required" class="text-danger"> Hint is required</span>
-                        <span *ngIf="f.hint.errors.maxlength" class="text-danger">Hint must be not more then 550 characters</span>
+                    <textarea rows="3" type="text" formControlName="description" placeholder="Enter description"
+                      [ngClass]="{ 'is-invalid': submitted && f.description.errors }" class="form-control" ></textarea>
+                      <div *ngIf="submitted && f.description.errors" class="error-text">
+                        <span *ngIf="f.description.errors.required" class="text-danger"> Description is required</span>
+                        <span *ngIf="f.description.errors.maxlength" class="text-danger">Description must be not more then 550 characters</span>
                       </div>
                   </div>
                 </div>
+
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Country </label>
+                  <label class="col-sm-3 col-form-label ">Navigation Link </label>
                   <div class="col-sm-9">
-                    <ng-select [clearable]="true" formControlName="country_id" [clearOnBackspace]="false" [items]="countryList" [multiple]=false bindLabel="country_name" bindValue="id"
-                    placeholder="Select Country">
-                  </ng-select>
+                    <input type="text" formControlName="navigation_link" placeholder="Enter Navigation Link"
+                      [ngClass]="{ 'is-invalid': submitted && f.navigation_link.errors }" class="form-control" />
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Syllabus </label>
-                  <div class="col-sm-9">
-                    <ng-select [clearable]="true" formControlName="package_type_id" [clearOnBackspace]="false" [items]="packageType" [multiple]=false bindLabel="name" bindValue="id"
-                    placeholder="Select Syllabus">
-                  </ng-select>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Category </label>
-                  <div class="col-sm-9">
-                    <ng-select [clearable]="true" formControlName="catagory_id" [clearOnBackspace]="false" [items]="categoryList" [multiple]=false bindLabel="name" bindValue="id"
-                    placeholder="Select Category">
-                  </ng-select>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Grade </label>
-                  <div class="col-sm-9">
-                    <ng-select [clearable]="true" formControlName="grade_id" [clearOnBackspace]="false" [items]="gradeList" [multiple]=false bindLabel="name" bindValue="id"
-                    placeholder="Select Grade">
-                  </ng-select>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">School </label>
-                  <div class="col-sm-9">
-                    <ng-select [clearable]="true" formControlName="school_id" [clearOnBackspace]="false" [items]="schoolList" [multiple]=false bindLabel="title" bindValue="id"
-                    placeholder="Select School">
-                  </ng-select>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Limit </label>
-                  <div class="col-sm-9">
-                    <input type="text" formControlName="limit" placeholder="Enter Limit"
-                      [ngClass]="{ 'is-invalid': submitted && f.limit.errors }" class="form-control" />
+                  <label class="col-sm-3 col-form-label required">Feature Images </label>
+                  <div class="col-sm-9 pt-2">
+                    <input type="file" formControlName="feature_images" (change)="onSelectFile($event)" placeholder="Upload file" accept="image/x-png,image/jpeg" placeholder="Insert file"/>
+                    <div *ngIf="submitted && f.feature_images.errors" class="error-text">
+                      <span *ngIf="f.feature_images.errors.required" class="text-danger"> File is required</span>
+                    </div>
                   </div>
                 </div>
                 <div class="row">

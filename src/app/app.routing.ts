@@ -72,6 +72,11 @@ export const AppRoutes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'aew-expert-list',
+        loadChildren: () => import('./aew-expert-list/aew-expert-list.module').then(m => m.AEWExpertListModule),
+        canActivate: [AuthGuard]
+      },
+      {
         path: 'school-list',
         loadChildren: () => import('./school-list/school-list.module').then(m => m.SchoolListModule),
         canActivate: [AuthGuard]

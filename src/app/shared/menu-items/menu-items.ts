@@ -84,6 +84,13 @@ const MENUITEMS = [
         permission: 'LocalAdmin'
       },
       {
+        state: 'aew-expert-list',
+        name: 'Expert List',
+        type: 'link',
+        icon: 'ti-control-forward',
+        permission: 'LocalAdmin'
+      },
+      {
         state: 'school-list',
         name: 'School List',
         type: 'link',

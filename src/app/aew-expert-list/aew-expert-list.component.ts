@@ -12,12 +12,12 @@ import { environment } from '../../environments/environment';
 import * as XLSX from 'xlsx';
 
 @Component({
-    selector: 'app-aew-topic-list',
-    templateUrl: './aew-topic-list.component.html',
+    selector: 'app-aew-expert-list',
+    templateUrl: './aew-expert-list.component.html',
     encapsulation: ViewEncapsulation.None
 })
 
-export class AEWTopicListComponent implements OnInit {
+export class AEWExpertListComponent implements OnInit {
     currentUser: any = null;
     entryForm: FormGroup;
     uploadForm: FormGroup;
@@ -26,7 +26,7 @@ export class AEWTopicListComponent implements OnInit {
 
     submitted = false;
     @BlockUI() blockUI: NgBlockUI;
-    modalTitle = 'Add New Topic';
+    modalTitle = 'Add News';
     btnSaveText = 'Save';
 
     modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
@@ -38,12 +38,6 @@ export class AEWTopicListComponent implements OnInit {
     coachingCenterList: Array<any> = [];
     loadingIndicator = false;
     ColumnMode = ColumnMode;
-
-    countryList: Array<any> = [];
-    packageType: Array<any> = [];
-    categoryList: Array<any> = [];
-    gradeList: Array<any> = [];
-    schoolList: Array<any> = [];
 
     urls = [];
     files = [];
@@ -79,28 +73,17 @@ export class AEWTopicListComponent implements OnInit {
         this.entryForm = this.formBuilder.group({
             id: [null],
             title: [null, [Validators.required, Validators.maxLength(550)]],
-            hint: [null, [Validators.required, Validators.maxLength(550)]],
-            country_id: [18],
-            package_type_id: [null, [Validators.required]],
-            catagory_id: [null, [Validators.required]],
-            grade_id: [null],
-            school_id: [null],
-            limit: [100, [Validators.required]],
-            is_active: [true],
+            description: [null, [Validators.required, Validators.maxLength(550)]],
+            navigation_link: [null, [Validators.maxLength(550)]],
+            feature_images: [null],
+            is_active: [true]
         });
 
         this.uploadForm = this.formBuilder.group({
             feature_thumbnail: ['']
         });
 
-        this.getCountryList();
-        this.getPackageTypeList();
-        this.getCategoryList();
-        this.getGradeList();
-        this.getSchoolList();
-
         this.getList();
-        // this.getCoachingCenterList();
     }
 
     get f() {
@@ -151,65 +134,10 @@ export class AEWTopicListComponent implements OnInit {
         }
     }
 
-    getCountryList() {
-        this._service.get('country-list').subscribe(res => {
-            if (res.status == false) {
-                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
-                return;
-            }
-            this.countryList = res.data;
-        }, err => { }
-        );
-    }
-
-    getPackageTypeList() {
-        this._service.get('syllabus-list').subscribe(res => {
-            if (res.status == false) {
-                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
-                return;
-            }
-            this.packageType = res.data;
-        }, err => { }
-        );
-    }
-
-    getCategoryList() {
-        this._service.get('category-list').subscribe(res => {
-            if (res.status == false) {
-                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
-                return;
-            }
-            this.categoryList = res.data;
-        }, err => { }
-        );
-    }
-
-    getGradeList() {
-        this._service.get('grade-list').subscribe(res => {
-            if (res.status == false) {
-                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
-                return;
-            }
-            this.gradeList = res.data;
-        }, err => { }
-        );
-    }
-
-    getSchoolList() {
-        this._service.get('school-list').subscribe(res => {
-            if (res.status == false) {
-                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
-                return;
-            }
-            this.schoolList = res.data;
-        }, err => { }
-        );
-    }
-
     getList() {
         this.loadingIndicator = true;
 
-        this._service.get('admin/topic-list').subscribe(res => {
+        this._service.get('admin/expert-list').subscribe(res => {
             if (res.status == false) {
                 this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
                 return;
@@ -229,18 +157,13 @@ export class AEWTopicListComponent implements OnInit {
 
     getItem(item, template: TemplateRef<any>) {
 
-        this.modalTitle = 'Update Topic';
+        this.modalTitle = 'Update Package';
         this.btnSaveText = 'Update';
 
         this.entryForm.controls['id'].setValue(item.id);
         this.entryForm.controls['title'].setValue(item.title);
-        this.entryForm.controls['hint'].setValue(item.hint);
-        this.entryForm.controls['country_id'].setValue(item.country_id ? item.country_id : null);
-        this.entryForm.controls['package_type_id'].setValue(item.syllabus_id ? item.syllabus_id : null);
-        this.entryForm.controls['catagory_id'].setValue(item.catagory_id ? item.catagory_id : null);
-        this.entryForm.controls['grade_id'].setValue(item.grade_id ? item.grade_id : null);
-        this.entryForm.controls['school_id'].setValue(item.school_id ? item.school_id : null);
-        this.entryForm.controls['limit'].setValue(item.limit);
+        this.entryForm.controls['description'].setValue(item.description);
+        this.entryForm.controls['navigation_link'].setValue(item.navigation_link);
         this.entryForm.controls['is_active'].setValue(item.is_active);
 
         this.modalRef = this.modalService.show(template, this.modalConfig);
@@ -253,28 +176,23 @@ export class AEWTopicListComponent implements OnInit {
         }
 
         const formData = new FormData();
-        // if(this.uploadForm.get('feature_thumbnail').value){
-        //     formData.append('file', this.uploadForm.get('feature_thumbnail').value);
-        // }
+        if(this.uploadForm.get('feature_thumbnail').value){
+            formData.append('file', this.uploadForm.get('feature_thumbnail').value);
+        }
 
         this.entryForm.value.id ? this.blockUI.start('Saving...') : this.blockUI.start('Updating...');
 
         const obj = {
             id: this.entryForm.value.id ? this.entryForm.value.id : null,
             title: this.entryForm.value.title.trim(),
-            hint: this.entryForm.value.hint ? this.entryForm.value.hint.trim() : null,
-            country_id: this.entryForm.value.country_id,
-            package_type_id: this.entryForm.value.package_type_id,
-            catagory_id: this.entryForm.value.catagory_id,
-            grade_id: this.entryForm.value.grade_id,
-            school_id: this.entryForm.value.school_id,
-            limit: this.entryForm.value.limit,
+            description: this.entryForm.value.description.trim(),
+            navigation_link: this.entryForm.value.navigation_link ? this.entryForm.value.navigation_link.trim(): null,
             is_active: this.entryForm.value.is_active
         };
 
         formData.append('data', JSON.stringify(obj));
 
-        this._service.post('admin/topic-save-or-update', formData).subscribe(
+        this._service.post('admin/news-save-or-update', formData).subscribe(
             data => {
                 this.blockUI.stop();
                 if (data.status == true) {
@@ -293,10 +211,6 @@ export class AEWTopicListComponent implements OnInit {
         );
     }
 
-    openUploadModal(template: TemplateRef<any>){
-        this.toastr.warning('Feature not activated yet!', 'Attention!', { timeOut: 2000 });
-    }
-
     toggleExpandRow(row) {
         this.table.rowDetail.toggleExpandRow(row);
     }
@@ -305,9 +219,8 @@ export class AEWTopicListComponent implements OnInit {
         this.entryForm.reset();
         this.modalRef.hide();
         this.submitted = false;
-        this.modalTitle = 'Add New Topic';
+        this.modalTitle = 'Add New News';
         this.btnSaveText = 'Save';
-        this.packagePrice = 0;
     }
 
     openModal(template: TemplateRef<any>) {
